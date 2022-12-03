@@ -1,0 +1,16 @@
+package com.erudite.model;
+
+
+public class UserModel {
+	
+	String email;
+	String password;
+	String role;
+	
+	
+	
+	
+	
+	
+
+}

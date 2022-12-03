@@ -1,0 +1,15 @@
+package com.erudite;
+
+import com.erudite.HashPassword;
+
+public class Main {
+	
+	   public String getData(){
+	        return "data";
+	    }
+	   
+	   
+	   public static String Main(String[] args) {
+		   HashPassword hash = new HashPassword();
+	   }
+}

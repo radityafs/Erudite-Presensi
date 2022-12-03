@@ -1,0 +1,8 @@
+package com.erudite;
+
+public class Main {
+	
+	   public String getData(String[] args){
+	        return "data";
+	    }
+}

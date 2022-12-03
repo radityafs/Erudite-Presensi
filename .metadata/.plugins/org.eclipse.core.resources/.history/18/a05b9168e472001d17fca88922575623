@@ -1,0 +1,11 @@
+package com.erudite.model;
+
+import id.ac.vokasi.d3ti.mysqlconnect.String;
+
+public class UserModel {
+	
+	String nim;
+	String nama;
+	String alamat;
+
+}
