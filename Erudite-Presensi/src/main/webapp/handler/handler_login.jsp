@@ -13,7 +13,6 @@
 <%@ page import="java.util.ArrayList" %>
 
 <% 
-
 	String email=request.getParameter("email");
 	String password=request.getParameter("password");
 	
@@ -30,12 +29,23 @@
 		session.setAttribute("error","Email / Password yang anda masukan salah...");
 		response.sendRedirect("../");
 	}else{
-		session.setAttribute("userId",userData.get(0).getId());
-		session.setAttribute("userEmail",userData.get(0).getEmail());
-		session.setAttribute("userName",userData.get(0).getName());
-		session.setAttribute("userRole",userData.get(0).getRole());
 		
-		response.sendRedirect("../dashboard/index.jsp");
+		UserModel UserLogged = userData.get(0);
+		
+		session.setAttribute("userId",UserLogged.getId());
+		session.setAttribute("userEmail",UserLogged.getEmail());
+		session.setAttribute("userName",UserLogged.getName());
+		session.setAttribute("userRole",UserLogged.getRole());
+		
+		out.print(UserLogged.getRole());
+		
+		if(UserLogged.getRole().equals("ADMIN")){
+			response.sendRedirect("../dashboard/index.jsp");
+		}else{
+			response.sendRedirect("../user.jsp");
+		}
+		
+
 	}
 	
 

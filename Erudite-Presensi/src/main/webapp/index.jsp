@@ -55,8 +55,7 @@
 </head>
 <body>
 <div
-        class="app app-auth-sign-in align-content-stretch d-flex flex-wrap justify-content-end"
->
+        class="app app-auth-sign-in align-content-stretch d-flex flex-wrap justify-content-end">
     <div class="app-auth-background"></div>
     <div class="app-auth-container">
         <div class="logo">
@@ -78,6 +77,7 @@
 
 		<form action="handler/handler_login.jsp" method="POST">
         <div class="auth-credentials m-b-xxl">
+        
             <label for="signInEmail" class="form-label">Email address</label>
             <input
             		name="email"
@@ -97,6 +97,7 @@
                     aria-describedby="signInPassword"
                     placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
             />
+            
         </div>
 
         <div class="auth-submit">
@@ -105,6 +106,7 @@
             >Forgot password?</a
             >
         </div>
+        
         </form>
         
         <div class="divider"></div>

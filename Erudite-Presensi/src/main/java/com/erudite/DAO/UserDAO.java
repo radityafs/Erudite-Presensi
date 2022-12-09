@@ -16,29 +16,18 @@ public class UserDAO {
 	private UserModel dataUser;
 	
 	public UserDAO() {
-		
-		
 		String url="jdbc:mysql://localhost:3306/erudite_presensi";
 		String username="root";
 		String password="";
 		
 		try {
-
 			Class.forName("com.mysql.jdbc.Driver"); 
 			con=DriverManager.getConnection(url,username,password);
-			
-
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			
-
 		}catch (SQLException e) {
 			e.printStackTrace();
-			
-
 		}
-		
-		
 		
 	}
 	
@@ -90,5 +79,23 @@ public class UserDAO {
 		}
 		
 		return userData;
+	}
+	
+	
+	public int countUser() {
+		String query = "SELECT COUNT(*) AS total FROM users WHERE role = 'USER'";
+		ResultSet sd = this.executeQuery(query);
+
+		int total = 0;
+
+		try {
+			while(sd.next()) {
+				total = sd.getInt("total");
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return total;
 	}
 }

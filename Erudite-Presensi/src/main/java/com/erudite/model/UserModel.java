@@ -40,5 +40,9 @@ public class UserModel {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	public void setId(String string) {
+		this.id = id;
+	}
 
 }
