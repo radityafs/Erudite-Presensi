@@ -1,7 +1,0 @@
-INDEX VERSION 1.131
-C:\Users\radit\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1435960643.index
-\Erudite-Presensi\src\main\java
-C:\Users\radit\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\87901679.index
-\Erudite-Presensi\src\main\java
-C:\Users\radit\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2173885681.index
-\MultiPlatform22Web\src\main\java
