@@ -343,8 +343,8 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     Featured
                                 </div>
                                 <div class="card-body">
-                                    <h1 class="card-subtitle mb-2">20:19:54</h1>
-                                    <h5 class="card-subtitle mb-2 text-muted">Selasa, 29 Februari</h5>
+                                    <h1 class="card-subtitle mb-2" id="clock">20:19:54</h1>
+                                    <h5 class="card-subtitle mb-2 text-muted" id="date">Selasa, 29 Februari</h5>
 
                                     <div class='w-full d-flex justify-content-end'>
                                  
@@ -383,6 +383,36 @@ PresensiDAO connectionPresensi = new PresensiDAO();
     <script src="http://localhost/assets/js/main.min.js"></script>
     <script src="http://localhost/assets/js/custom.js"></script>
     <script src="http://localhost/assets/js/pages/dashboard.js"></script>
+    <script>
+        function updateClock()
+        {
+        var currentTime = new Date ( ) ;
+        var currentHours = currentTime.getHours ( ) ;
+        var currentMinutes = currentTime.getMinutes ( ) ;
+        var currentSeconds = currentTime.getSeconds ( ) ;
+        // Pad the minutes and seconds with leading zeros, if required
+        currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+        currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+        // Choose either "AM" or "PM" as appropriate
+        var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+        // Convert the hours component to 12-hour format if needed
+        currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+        // Convert an hours component of "0" to "12"
+        currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+        // Update the time display
+        document.getElementById("clock").firstChild.nodeValue = currentHours;
+        // Update the date display
+        document.getElementById("date").firstChild.nodeValue = currentHours;
+        }
+
+        $(document).ready(function() {
+            updateClock();
+            setInterval('updateClock()', 1000);
+            }
+        );
+
+        updateClock();
+    </script>
 </body>
 
 </html>
