@@ -137,6 +137,7 @@ public class PresensiDAO {
         return presensi;
     }
 
+
     public void insertLogPresensi(String id_users) {
         int id_presensi = getPresensiIdToday();
 
