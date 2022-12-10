@@ -278,6 +278,37 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                 </div>
                             </div>
                         </div>
+                                               <div class="row">
+                            <div class="card">
+                                <div class="card-header">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    <h1 class="card-subtitle mb-2" id="clock">20:19:54</h1>
+                                    <h5 class="card-subtitle mb-2 text-muted" id="date">Selasa, 29 Februari</h5>
+
+                                    <div class='w-full d-flex justify-content-end'>
+                                 
+                                    <% 
+                                    	String userId = session.getAttribute("userId").toString();
+                                   		ArrayList<PresensiModel> isAlreadyAbsensi = connectionPresensi.isAlreadyPresensiToday(userId);
+                                        
+                                        if(isAlreadyAbsensi.size() == 0) {
+                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Masuk</a>");
+                                        }else{
+                                            if(isAlreadyAbsensi.get(0).getWaktuPulang() == null) {
+                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Pulang</a>");
+                                            }
+                                        }
+
+                                        
+                                    
+                                    %>
+
+                                       </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-xl-4">
                                 <div class="card widget widget-stats">
@@ -337,37 +368,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-header">
-                                    Featured
-                                </div>
-                                <div class="card-body">
-                                    <h1 class="card-subtitle mb-2" id="clock">20:19:54</h1>
-                                    <h5 class="card-subtitle mb-2 text-muted" id="date">Selasa, 29 Februari</h5>
-
-                                    <div class='w-full d-flex justify-content-end'>
-                                 
-                                    <% 
-                                    	String userId = session.getAttribute("userId").toString();
-                                   		ArrayList<PresensiModel> isAlreadyAbsensi = connectionPresensi.isAlreadyPresensiToday(userId);
-                                        
-                                        if(isAlreadyAbsensi.size() == 0) {
-                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Masuk</a>");
-                                        }else{
-                                            if(isAlreadyAbsensi.get(0).getWaktuPulang() == null) {
-                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Pulang</a>");
-                                            }
-                                        }
-
-                                        
-                                    
-                                    %>
-
-                                       </div>
-                                </div>
-                            </div>
-                        </div>
+ 
                     </div>
                 </div>
             </div>
@@ -383,35 +384,30 @@ PresensiDAO connectionPresensi = new PresensiDAO();
     <script src="http://localhost/assets/js/main.min.js"></script>
     <script src="http://localhost/assets/js/custom.js"></script>
     <script src="http://localhost/assets/js/pages/dashboard.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script>
-        function updateClock()
-        {
-        var currentTime = new Date ( ) ;
-        var currentHours = currentTime.getHours ( ) ;
-        var currentMinutes = currentTime.getMinutes ( ) ;
-        var currentSeconds = currentTime.getSeconds ( ) ;
-        // Pad the minutes and seconds with leading zeros, if required
-        currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
-        currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
-        // Choose either "AM" or "PM" as appropriate
-        var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
-        // Convert the hours component to 12-hour format if needed
-        currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
-        // Convert an hours component of "0" to "12"
-        currentHours = ( currentHours == 0 ) ? 12 : currentHours;
-        // Update the time display
-        document.getElementById("clock").firstChild.nodeValue = currentHours;
-        // Update the date display
-        document.getElementById("date").firstChild.nodeValue = currentHours;
-        }
-
         $(document).ready(function() {
-            updateClock();
-            setInterval('updateClock()', 1000);
-            }
-        );
 
-        updateClock();
+            const updateClock = () => {
+                const clock = document.getElementById('clock');
+                const date = document.getElementById('date');
+
+                const time = moment().format('HH:mm:ss');
+                const dateToday = moment().format('dddd, DD MMMM');
+
+                console.log(time);
+                console.log(dateToday)
+
+                clock.textContent = time;
+                date.textContent = dateToday;
+            }
+
+            updateClock();
+
+            setInterval(() => {
+                updateClock();
+            }, 1000);
+        });
     </script>
 </body>
 

@@ -7,17 +7,12 @@ public class mainUtils {
 	private LocalTime jamMasuk = LocalTime.parse("08:00:00");
 	private LocalTime jamPulang = LocalTime.parse("17:00:00");
 	
-	
 	public double calculatePercentage(double obtained, double total) {
 	        return obtained * 100 / total;
 	}
 	
 	public String getResponse (PresensiModel presensi) {
 		String descriptions = "";
-
-		
-		
-
 
 		 if(presensi.getWaktuMasuk() != null) {
 		LocalTime jamMasukUser = LocalTime.parse(presensi.getWaktuMasuk().split(" ")[1]);
@@ -39,10 +34,5 @@ public class mainUtils {
 
 		 return descriptions;
 	}
-	
-
-	
-
-	
 
 }

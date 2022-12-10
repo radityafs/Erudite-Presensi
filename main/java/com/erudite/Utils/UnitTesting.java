@@ -14,7 +14,6 @@ public class UnitTesting {
 		
 		mainUtils Utils = new mainUtils();
 		
-
 		String result = Utils.getResponse(presensi);
 		System.out.print(result);
 	}
