@@ -78,8 +78,12 @@ pageEncoding="ISO-8859-1"%>
     <![endif]-->
   </head>
 
-  <%@ page import="com.erudite.model.*" %> <%@ page import="com.erudite.DAO.*"
-  %> <%@ page import="java.util.ArrayList" %>
+  <%@ page import="com.erudite.model.*" %>
+  <%@ page import="com.erudite.Utils.*" %>
+  <%@ page import="com.erudite.DAO.*"%>
+  <%@ page import="java.util.ArrayList" %>
+
+  
 
   <body>
     <div class="app align-content-stretch d-flex flex-wrap">
@@ -102,7 +106,7 @@ pageEncoding="ISO-8859-1"%>
             <li class="sidebar-title">Features</li>
             <li class="active-page">
               <a href="index.jsp" class="active"
-                ><i class="material-icons-two-tone">`</i>Dashboard</a
+                ><i class="material-icons-two-tone">dashboard</i>Dashboard</a
               >
             </li>
             <li>
@@ -150,10 +154,15 @@ pageEncoding="ISO-8859-1"%>
           </nav>
         </div>
 
-        <% UserDAO connectionUser = new UserDAO(); int countUser =
-        connectionUser.countUser(); PresensiDAO connectionPresensi = new
-        PresensiDAO(); int countTotalPresensi =
-        connectionPresensi.getPresensiToday().size(); %>
+        <%
+        UserDAO connectionUser = new UserDAO(); 
+        int countUser = connectionUser.countUser(); 
+        PresensiDAO connectionPresensi = new PresensiDAO(); 
+        int countTotalPresensi = connectionPresensi.getPresensiToday().size();
+                
+        mainUtils Utils = new mainUtils();
+        %>
+
 
         <div class="app-content">
           <div class="content-wrapper">
@@ -178,9 +187,7 @@ pageEncoding="ISO-8859-1"%>
                         </div>
                         <div class="widget-stats-content flex-fill">
                           <span class="widget-stats-title">Total User</span>
-                          <span class="widget-stats-amount"
-                            ><% out.print(countUser); %></span
-                          >
+                          <span class="widget-stats-amount"><% out.print(countUser); %></span>
                           <span class="widget-stats-info">Total Pengguna</span>
                         </div>
                       </div>
@@ -221,10 +228,7 @@ pageEncoding="ISO-8859-1"%>
                           <span class="widget-stats-title"
                             >Persentase Today</span
                           >
-                          <span class="widget-stats-amount"
-                            ><% out.print((countTotalPresensi / countUser) *
-                            100); %>%</span
-                          >
+                          <span class="widget-stats-amount"><% out.print(String.format("%.2f", Utils.calculatePercentage(countTotalPresensi, countUser))); %>%</span>
                           <span class="widget-stats-info"
                             ><% out.print(countTotalPresensi); %> User / <%
                             out.print(countUser); %> User</span
@@ -271,57 +275,33 @@ pageEncoding="ISO-8859-1"%>
                       >
                         <thead>
                           <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Waktu</th>
-                            <th>Action</th>
+                          <th>ID</th>
+                          <th>name</th>
+                          <th>Waktu Masuk</th>
+                          <th>Waktu Pulang</th>
+                          <th>Description</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>2021-05-01 10:00:00</td>
-                            <td>
-                              <form
-                                action="handler/changeAbsensi"
-                                style="
-                                  display: flex;
-                                  justify-content: space-between;
-                                "
-                              >
-                                <input type="hidden" name="id" value="POST" />
-                                <select
-                                  style="
-                                    display: inline;
-                                    width: 50%;
-                                    min-width: 100px;
-                                  "
-                                  class="form-control"
-                                  method=""
-                                >
-                                  <option value="Datang">Datang</option>
-                                  <option value="Pulang">Terlambat</option>
-                                  <option value="Terlambat">Pulang</option>
-                                </select>
-
-                                <button
-                                  style="width: 30%; min-width: 100px"
-                                  type="submit"
-                                  class="btn btn-warning"
-                                >
-                                  Ganti
-                                </button>
-                              </form>
-                            </td>
+                            <% for (PresensiModel presensi : connectionPresensi.getPresensiToday()) { %>
+                            <tr>
+                            <td><% out.print(presensi.getId()); %></td>
+                            <td><% out.print(presensi.getUser().getName()); %></td>
+                            <td><% out.print(presensi.getWaktuMasuk()); %></td>
+                            <td><% out.print((presensi.getWaktuPulang() != null) ? presensi.getWaktuPulang() : "Belum"); %></td>
+                            <td><% out.print((presensi.getDescription() != null) ? presensi.getDescription() : Utils.getResponse(presensi)); %></td>
+                            </tr>
+                            <% } %>
+                            
                           </tr>
                         </tbody>
                         <tfoot>
                           <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Waktu</th>
-                            <th>Action</th>
+                          <th>ID</th>
+                          <th>name</th>
+                          <th>Waktu Masuk</th>
+                          <th>Waktu Pulang</th>
+                          <th>Description</th>
                           </tr>
                         </tfoot>
                       </table>
@@ -364,26 +344,18 @@ pageEncoding="ISO-8859-1"%>
                   tabindex="-1"
                   style="display: none; width: 100%"
                 >
-                    <%
-                    ArrayList<UserModel> listUser = connectionUser.userList();
-                    
-                    for (int i = 0; i < listUser.size(); i++) { %>
-                      out.print("<option value=" + listUser.get(i).getId() + ">" + listUser.get(i).getName() + "</option>";
-                    <% } %>
-
-                    %>
-
-              </select>
+                <%
+                    ArrayList<UserModel> userList = connectionUser.userList();
+   
+                    for (int i = 0; i < userList.size(); i++) {
+                        out.print(String.format("<option value='%s'>%s</option>", userList.get(i).getId(), userList.get(i).getName()));
+                    }
+                %>
+                </select>
               </div>
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Action</label
-                >
-                <select
-                  class="js-states form-control"
-                  tabindex="-1"
-                  style="display: none; width: 100%"
-                >
+                <label for="exampleInputEmail1" class="form-label">Action</label>
+                <select class="js-states form-control" tabindex="-1" style="display: none; width: 100%">
                   <option value="ALFA">ALFA</option>
                   <option value="IJIN">IJIN</option>
                   <option value="SAKIT">SAKIT</option>

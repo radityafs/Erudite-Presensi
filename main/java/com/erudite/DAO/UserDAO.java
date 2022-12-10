@@ -45,7 +45,7 @@ public class UserDAO {
 	
 	
 	public void registerUser(UserModel User) {
-		String query= String.format("INSERT INTO users(name,email,password,role) VALUES ('%s','%s','%s')",User.getName(),User.getEmail(),User.getPassword());
+		String query= String.format("INSERT INTO users(name,email,password,role) VALUES ('%s','%s','%s','%s')",User.getName(),User.getEmail(),User.getPassword(), User.getRole());
 		try {
 			st=con.createStatement();
 			st.executeUpdate(query);
@@ -68,6 +68,7 @@ public class UserDAO {
 			while(sd.next()) {
 				UserModel user=new UserModel();
 				
+				user.setId(sd.getInt("id"));
 				user.setEmail(sd.getString("email"));
 				user.setRole(sd.getString("role"));
 				user.setName(sd.getString("name"));
@@ -93,7 +94,8 @@ public class UserDAO {
 				
 				user.setId(sd.getInt("id"));
 				user.setName(sd.getString("name"));
-				
+				user.setEmail(sd.getString("email"));
+
 				userData.add(user);
 			}
 		}catch (SQLException e) {

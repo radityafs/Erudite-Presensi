@@ -67,6 +67,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+  
+  <%@ page import="com.erudite.model.*" %> 
+  <%@ page import="com.erudite.DAO.*"%> 
+  <%@ page import="java.util.ArrayList" %>
+  
+  <% UserDAO connectionUser = new UserDAO(); %>
+  
   <body>
     <div class="app align-content-stretch d-flex flex-wrap">
       <div class="app-sidebar">
@@ -177,19 +184,28 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>radityafiqa4@gmail.com</td>
-                            <td>
-                              <form action="handler/user-delete.jsp">
-                                <input type="hidden" name="id" />
-                                <button type="submit" class="btn btn-danger">
-                                  Delete
-                                </button>
-                              </form>
-                            </td>
-                          </tr>
+
+                <%
+                    ArrayList<UserModel> userList = connectionUser.userList();
+   
+                    for (int i = 0; i < userList.size(); i++) {
+                        UserModel user = userList.get(i);
+                        out.print("<tr>");
+                        out.println("<td>" + user.getId() + "</td>");
+                        out.println("<td>" + user.getName() + "</td>");
+                        out.println("<td>" + user.getEmail() + "</td>");
+                        out.println("<td>");
+                        out.println("<form action='handler/user-delete.jsp'>");
+                        out.println("<input type='hidden' name='id' value='" + user.getId() + "' />");
+                        out.println("<button type='submit' class='btn btn-danger'>");
+                        out.println("Delete");
+                        out.println("</button>");
+                        out.println("</form>");
+                        out.println("</td>");
+                        out.println("</tr>");
+                    }
+                    
+                %>
                         </tbody>
                         <tfoot>
                           <tr>
@@ -230,8 +246,8 @@
               aria-label="Close"
             ></button>
           </div>
+          <form action="../handler/handler_create_user.jsp" method="POST">
           <div class="modal-body">
-            <form action="handler/add_user.jsp">
               <div class="mb-3">
                 <label for="name" class="col-form-label">Nama:</label>
                 <input
@@ -262,20 +278,20 @@
                   required
                 />
               </div>
-            </form>
+
           </div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+              data-bs-dismiss="modal">
               Close
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">
               Tambahkan User
             </button>
           </div>
+          </form>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ public class PresensiModel{
     String waktuPulang;
     String updatedAt;
     String createdAt;
+    String description;
 
     UserModel user;
 
@@ -67,6 +68,14 @@ public class PresensiModel{
 
 	public void setId(String string) {
 		this.id = string;
+	}
+	
+	public void setDescription(String string) {
+		this.description = string;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 
 }

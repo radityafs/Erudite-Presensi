@@ -44,6 +44,25 @@
     <![endif]-->
 </head>
 
+<%@ page import="com.erudite.model.*" %>
+<%@ page import="com.erudite.DAO.*"%>
+<%@ page import="java.util.ArrayList" %>
+
+<% 
+//check session userId and userRole
+if(session.getAttribute("userId") == null || session.getAttribute("userRole") == null){
+    response.sendRedirect("index.jsp");
+}else{
+    if(session.getAttribute("userRole").equals("admin")){
+        response.sendRedirect("dashboard/index.jsp");
+    }
+}
+
+
+UserDAO connectionUser = new UserDAO(); 
+PresensiDAO connectionPresensi = new PresensiDAO(); 
+
+%>
 <body>
     <div class="app align-content-stretch d-flex flex-wrap">
         <div class="app-sidebar">
@@ -53,7 +72,7 @@
                     <a href="#">
                         <img src="http://localhost/assets/images/avatars/avatar.png">
                         <span class="activity-indicator"></span>
-                        <span class="user-info-text">Chloe<br><span class="user-state-info">On a call</span></span>
+                        <span class="user-info-text"><% out.print(session.getAttribute("userName")); %><br><span class="user-state-info">On a call</span></span>
                     </a>
                 </div>
             </div>
@@ -326,8 +345,26 @@
                                 <div class="card-body">
                                     <h1 class="card-subtitle mb-2">20:19:54</h1>
                                     <h5 class="card-subtitle mb-2 text-muted">Selasa, 29 Februari</h5>
-                                    <p class="card-text">Presensilah tepat waktu agar tidak menyesal dikemudian waktu.</p>
-                                    <a href="#" class="btn btn-primary">Presensi</a>
+
+                                    <div class='w-full d-flex justify-content-end'>
+                                 
+                                    <% 
+                                    	String userId = session.getAttribute("userId").toString();
+                                   		ArrayList<PresensiModel> isAlreadyAbsensi = connectionPresensi.isAlreadyPresensiToday(userId);
+                                        
+                                        if(isAlreadyAbsensi.size() == 0) {
+                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Masuk</a>");
+                                        }else{
+                                            if(isAlreadyAbsensi.get(0).getWaktuPulang() == null) {
+                                                out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Pulang</a>");
+                                            }
+                                        }
+
+                                        
+                                    
+                                    %>
+
+                                       </div>
                                 </div>
                             </div>
                         </div>

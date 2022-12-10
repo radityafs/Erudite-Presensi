@@ -45,7 +45,7 @@ public class PresensiDAO {
 	}
 
     public void insertPresensiIdToday() {
-        String query= String.format("INSERT INTO presensi(created_at) VALUES (CURDATE())");
+        String query= String.format("INSERT INTO presensi(createdAt) VALUES (CURDATE())");
         try {
             st=con.createStatement();
             st.executeUpdate(query);
@@ -74,28 +74,10 @@ public class PresensiDAO {
         return id_presensi;
     }
 
-    public boolean isAlreadyPresensiToday(String id_user) {
-        boolean isAlreadyPresensiToday = false;
-
-        String query= String.format("SELECT * FROM log_presensi WHERE DATE(created_at) = CURDATE() AND idUser = '%s'",id_user);
-        try {
-            st=con.createStatement();
-            rs=st.executeQuery(query);
-            while(rs.next()) {
-                isAlreadyPresensiToday = true;
-            }
-        }catch (SQLException e) {
-            //TODO Aut0-generated catch block
-            e.printStackTrace();
-            System.err.println(e);
-        }
-
-        return isAlreadyPresensiToday;
-    }
-
-    public ArrayList<PresensiModel> getPresensiToday() {
+    public ArrayList<PresensiModel> isAlreadyPresensiToday(String id_user) {
         ArrayList<PresensiModel> presensi = new ArrayList<PresensiModel>();
-        String query= String.format("SELECT * FROM log_presensi WHERE DATE(created_at) = CURDATE() LEFT JOIN user ON presensi.id_user = user.id");
+
+        String query= String.format("SELECT * FROM log_presensi WHERE DATE(log_presensi.createdAt) = CURDATE() AND idUser = %s",Integer.parseInt(id_user));
         try {
             st=con.createStatement();
             rs=st.executeQuery(query);
@@ -107,11 +89,41 @@ public class PresensiDAO {
                 dataPresensi.setIdPresensi(rs.getString("idPresensi"));
                 dataPresensi.setWaktuMasuk(rs.getString("waktuMasuk"));
                 dataPresensi.setWaktuPulang(rs.getString("waktuPulang"));
+                dataPresensi.setDescription(rs.getString("description"));
+                dataPresensi.setCreatedAt(rs.getString("createdAt"));
+                dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
+
+                presensi.add(dataPresensi);
+            }
+        }catch (SQLException e) {
+            //TODO Aut0-generated catch block
+            e.printStackTrace();
+            System.err.println(e);
+        }
+
+        return presensi;
+    }
+
+    public ArrayList<PresensiModel> getPresensiToday() {
+        ArrayList<PresensiModel> presensi = new ArrayList<PresensiModel>();
+        String query= "SELECT * FROM log_presensi LEFT JOIN users ON log_presensi.idUser = users.id WHERE DATE(log_presensi.createdAt) = CURDATE()";
+        try {
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            while(rs.next()) {
+                PresensiModel dataPresensi = new PresensiModel();
+                UserModel dataUser = new UserModel();
+
+                dataPresensi.setId(rs.getString("id"));
+                dataPresensi.setIdPresensi(rs.getString("idPresensi"));
+                dataPresensi.setWaktuMasuk(rs.getString("waktuMasuk"));
+                dataPresensi.setWaktuPulang(rs.getString("waktuPulang"));
+                dataPresensi.setDescription(rs.getString("description"));
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
                 dataUser.setId(rs.getString("idUser"));
-                dataUser.setName(rs.getString("nama"));
+                dataUser.setName(rs.getString("name"));
                 dataPresensi.setUser(dataUser);
 
                 presensi.add(dataPresensi);
@@ -121,6 +133,7 @@ public class PresensiDAO {
             e.printStackTrace();
             System.err.println(e);
         }
+        
         return presensi;
     }
 
@@ -143,9 +156,22 @@ public class PresensiDAO {
 
     }
 
+    public void updateWaktuPulang(String id_users) {
+        int id_presensi = getPresensiIdToday();
+
+        String query= String.format("UPDATE log_presensi SET waktuPulang = NOW(), updatedAt = NOW() WHERE idPresensi = '%s' AND idUser = '%s'",id_presensi,id_users);
+        try {
+            st=con.createStatement();
+            st.executeUpdate(query);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e);
+        }
+    }
+
     public ArrayList<PresensiModel> getPresensiByDate(String start_date, String end_date) {
         ArrayList<PresensiModel> presensi = new ArrayList<PresensiModel>();
-        String query= String.format("SELECT * FROM presensi WHERE DATE(created_at) BETWEEN '%s' AND '%s' LEFT JOIN user ON presensi.id_user = user.id",start_date,end_date);
+        String query= String.format("SELECT * FROM presensi WHERE DATE(createdAt) BETWEEN '%s' AND '%s' LEFT JOIN user ON presensi.id_user = user.id",start_date,end_date);
         try {
             st=con.createStatement();
             rs=st.executeQuery(query);
@@ -157,6 +183,7 @@ public class PresensiDAO {
                 dataPresensi.setIdPresensi(rs.getString("idPresensi"));
                 dataPresensi.setWaktuMasuk(rs.getString("waktuMasuk"));
                 dataPresensi.setWaktuPulang(rs.getString("waktuPulang"));
+                dataPresensi.setDescription(rs.getString("description"));
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
