@@ -104,7 +104,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     <a class="nav-link hide-sidebar-toggle-button" href="#"><i
                                             class="material-icons">first_page</i></a>
                                 </li>
-                                <li class="nav-item dropdown hidden-on-mobile">
+                                <%-- <li class="nav-item dropdown hidden-on-mobile">
                                     <a class="nav-link dropdown-toggle" href="#" id="addDropdownLink" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="material-icons">add</i>
@@ -153,12 +153,12 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                             <button class="btn btn-primary">Create new repository</button>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --%>
                             </ul>
 
                         </div>
                         <div class="d-flex">
-                            <ul class="navbar-nav">
+                            <%-- <ul class="navbar-nav">
                                 <li class="nav-item hidden-on-mobile">
                                     <a class="nav-link active" href="#">Applications</a>
                                 </li>
@@ -263,7 +263,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                         </div>
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> --%>
                         </div>
                     </div>
                 </nav>
