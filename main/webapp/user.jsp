@@ -104,7 +104,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     <a class="nav-link hide-sidebar-toggle-button" href="#"><i
                                             class="material-icons">first_page</i></a>
                                 </li>
-                                <li class="nav-item dropdown hidden-on-mobile">
+                                <%-- <li class="nav-item dropdown hidden-on-mobile">
                                     <a class="nav-link dropdown-toggle" href="#" id="addDropdownLink" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="material-icons">add</i>
@@ -153,12 +153,12 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                             <button class="btn btn-primary">Create new repository</button>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --%>
                             </ul>
 
                         </div>
                         <div class="d-flex">
-                            <ul class="navbar-nav">
+                            <%-- <ul class="navbar-nav">
                                 <li class="nav-item hidden-on-mobile">
                                     <a class="nav-link active" href="#">Applications</a>
                                 </li>
@@ -263,7 +263,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                         </div>
                                     </div>
                                 </li>
-                            </ul>
+                            </ul> --%>
                         </div>
                     </div>
                 </nav>
@@ -343,8 +343,8 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     Featured
                                 </div>
                                 <div class="card-body">
-                                    <h1 class="card-subtitle mb-2">20:19:54</h1>
-                                    <h5 class="card-subtitle mb-2 text-muted">Selasa, 29 Februari</h5>
+                                    <h1 class="card-subtitle mb-2" id="clock">20:19:54</h1>
+                                    <h5 class="card-subtitle mb-2 text-muted" id="date">Selasa, 29 Februari</h5>
 
                                     <div class='w-full d-flex justify-content-end'>
                                  
@@ -383,6 +383,36 @@ PresensiDAO connectionPresensi = new PresensiDAO();
     <script src="http://localhost/assets/js/main.min.js"></script>
     <script src="http://localhost/assets/js/custom.js"></script>
     <script src="http://localhost/assets/js/pages/dashboard.js"></script>
+    <script>
+        function updateClock()
+        {
+        var currentTime = new Date ( ) ;
+        var currentHours = currentTime.getHours ( ) ;
+        var currentMinutes = currentTime.getMinutes ( ) ;
+        var currentSeconds = currentTime.getSeconds ( ) ;
+        // Pad the minutes and seconds with leading zeros, if required
+        currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+        currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+        // Choose either "AM" or "PM" as appropriate
+        var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+        // Convert the hours component to 12-hour format if needed
+        currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+        // Convert an hours component of "0" to "12"
+        currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+        // Update the time display
+        document.getElementById("clock").firstChild.nodeValue = currentHours;
+        // Update the date display
+        document.getElementById("date").firstChild.nodeValue = currentHours;
+        }
+
+        $(document).ready(function() {
+            updateClock();
+            setInterval('updateClock()', 1000);
+            }
+        );
+
+        updateClock();
+    </script>
 </body>
 
 </html>
