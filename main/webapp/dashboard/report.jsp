@@ -251,11 +251,7 @@
                                       }
                                     }
 
-
                                     countAlfa = countPresensi - (countMasuk + countIjin + countSakit);
-
-    
-                                    
                                   }
 
                                     out.print("<tr>");

@@ -46,7 +46,9 @@
 
 <%@ page import="com.erudite.model.*" %>
 <%@ page import="com.erudite.DAO.*"%>
+<%@ page import="com.erudite.Utils.*"%>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.time.*" %>
 
 <% 
 //check session userId and userRole
@@ -61,6 +63,38 @@ if(session.getAttribute("userId") == null || session.getAttribute("userRole") ==
 
 UserDAO connectionUser = new UserDAO(); 
 PresensiDAO connectionPresensi = new PresensiDAO(); 
+mainUtils Utils = new mainUtils();
+
+int userId = Integer.parseInt(session.getAttribute("userId").toString());
+
+String start = "2021-01-01";
+String end = LocalDate.now().toString();
+
+int countPresensi = connectionPresensi.getCountPresensiIdByDate(start, end);
+ArrayList<PresensiModel> presensiUser = connectionPresensi.getPresensiByDateAndId(start, end, userId);
+
+int countMasuk = 0;
+int countAlfa = 0;
+int countIjin = 0;
+int countSakit = 0;
+int countTerlambat = 0;
+
+for(int j = 0; j < presensiUser.size(); j++){
+  if(presensiUser.get(j).getDescription() != null && presensiUser.get(j).getWaktuMasuk() == null){
+    if(presensiUser.get(j).getDescription().equals("Ijin")){
+      countIjin++;
+    }else if(presensiUser.get(j).getDescription().equals("Sakit")){
+      countSakit++;
+    }
+  }
+  if(presensiUser.get(j).getWaktuMasuk() != null){
+    countMasuk++;
+    if(Utils.getResponse(presensiUser.get(j)).equals("Terlambat")){
+      countTerlambat++;
+    }
+  }
+  countAlfa = countPresensi - (countMasuk + countIjin + countSakit);
+}
 
 %>
 <body>
@@ -104,166 +138,10 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     <a class="nav-link hide-sidebar-toggle-button" href="#"><i
                                             class="material-icons">first_page</i></a>
                                 </li>
-                                <%-- <li class="nav-item dropdown hidden-on-mobile">
-                                    <a class="nav-link dropdown-toggle" href="#" id="addDropdownLink" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="material-icons">add</i>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="addDropdownLink">
-                                        <li><a class="dropdown-item" href="#">New Workspace</a></li>
-                                        <li><a class="dropdown-item" href="#">New Board</a></li>
-                                        <li><a class="dropdown-item" href="#">Create Project</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown hidden-on-mobile">
-                                    <a class="nav-link dropdown-toggle" href="#" id="exploreDropdownLink" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="material-icons-outlined">explore</i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-lg large-items-menu"
-                                        aria-labelledby="exploreDropdownLink">
-                                        <li>
-                                            <h6 class="dropdown-header">Repositories</h6>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <h5 class="dropdown-item-title">
-                                                    Neptune iOS
-                                                    <span class="badge badge-warning">1.0.2</span>
-                                                    <span class="hidden-helper-text">switch<i
-                                                            class="material-icons">keyboard_arrow_right</i></span>
-                                                </h5>
-                                                <span class="dropdown-item-description">Lorem Ipsum is simply dummy text
-                                                    of the printing and typesetting industry.</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <h5 class="dropdown-item-title">
-                                                    Neptune Android
-                                                    <span class="badge badge-info">dev</span>
-                                                    <span class="hidden-helper-text">switch<i
-                                                            class="material-icons">keyboard_arrow_right</i></span>
-                                                </h5>
-                                                <span class="dropdown-item-description">Lorem Ipsum is simply dummy text
-                                                    of the printing and typesetting industry.</span>
-                                            </a>
-                                        </li>
-                                        <li class="dropdown-btn-item d-grid">
-                                            <button class="btn btn-primary">Create new repository</button>
-                                        </li>
-                                    </ul>
-                                </li> --%>
                             </ul>
 
                         </div>
                         <div class="d-flex">
-                            <%-- <ul class="navbar-nav">
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link active" href="#">Applications</a>
-                                </li>
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link" href="#">Reports</a>
-                                </li>
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link" href="#">Projects</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link toggle-search" href="#"><i class="material-icons">search</i></a>
-                                </li>
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown"
-                                        data-bs-toggle="dropdown"><img src="http://localhost/assets/images/flags/us.png"
-                                            alt=""></a>
-                                    <ul class="dropdown-menu dropdown-menu-end language-dropdown"
-                                        aria-labelledby="languageDropDown">
-                                        <li><a class="dropdown-item" href="#"><img
-                                                    src="http://localhost/assets/images/flags/germany.png" alt="">German</a></li>
-                                        <li><a class="dropdown-item" href="#"><img
-                                                    src="http://localhost/assets/images/flags/italy.png" alt="">Italian</a></li>
-                                        <li><a class="dropdown-item" href="#"><img
-                                                    src="http://localhost/assets/images/flags/china.png" alt="">Chinese</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link nav-notifications-toggle" id="notificationsDropDown" href="#"
-                                        data-bs-toggle="dropdown">4</a>
-                                    <div class="dropdown-menu dropdown-menu-end notifications-dropdown"
-                                        aria-labelledby="notificationsDropDown">
-                                        <h6 class="dropdown-header">Notifications</h6>
-                                        <div class="notifications-dropdown-list">
-                                            <a href="#">
-                                                <div class="notifications-dropdown-item">
-                                                    <div class="notifications-dropdown-item-image">
-                                                        <span class="notifications-badge bg-info text-white">
-                                                            <i class="material-icons-outlined">campaign</i>
-                                                        </span>
-                                                    </div>
-                                                    <div class="notifications-dropdown-item-text">
-                                                        <p class="bold-notifications-text">Donec tempus nisi sed erat
-                                                            vestibulum, eu suscipit ex laoreet</p>
-                                                        <small>19:00</small>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notifications-dropdown-item">
-                                                    <div class="notifications-dropdown-item-image">
-                                                        <span class="notifications-badge bg-danger text-white">
-                                                            <i class="material-icons-outlined">bolt</i>
-                                                        </span>
-                                                    </div>
-                                                    <div class="notifications-dropdown-item-text">
-                                                        <p class="bold-notifications-text">Quisque ligula dui, tincidunt
-                                                            nec pharetra eu, fringilla quis mauris</p>
-                                                        <small>18:00</small>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notifications-dropdown-item">
-                                                    <div class="notifications-dropdown-item-image">
-                                                        <span class="notifications-badge bg-success text-white">
-                                                            <i class="material-icons-outlined">alternate_email</i>
-                                                        </span>
-                                                    </div>
-                                                    <div class="notifications-dropdown-item-text">
-                                                        <p>Nulla id libero mattis justo euismod congue in et metus</p>
-                                                        <small>yesterday</small>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notifications-dropdown-item">
-                                                    <div class="notifications-dropdown-item-image">
-                                                        <span class="notifications-badge">
-                                                            <img src="http://localhost/assets/images/avatars/avatar.png" alt="">
-                                                        </span>
-                                                    </div>
-                                                    <div class="notifications-dropdown-item-text">
-                                                        <p>Praesent sodales lobortis velit ac pellentesque</p>
-                                                        <small>yesterday</small>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notifications-dropdown-item">
-                                                    <div class="notifications-dropdown-item-image">
-                                                        <span class="notifications-badge">
-                                                            <img src="http://localhost/assets/images/avatars/avatar.png" alt="">
-                                                        </span>
-                                                    </div>
-                                                    <div class="notifications-dropdown-item-text">
-                                                        <p>Praesent lacinia ante eget tristique mattis. Nam sollicitudin
-                                                            velit sit amet auctor porta</p>
-                                                        <small>yesterday</small>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul> --%>
                         </div>
                     </div>
                 </nav>
@@ -281,7 +159,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                                <div class="row">
                             <div class="card">
                                 <div class="card-header">
-                                    Featured
+                                    <h2>Featured</h2>
                                 </div>
                                 <div class="card-body">
                                     <h1 class="card-subtitle mb-2" id="clock">20:19:54</h1>
@@ -290,8 +168,8 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                     <div class='w-full d-flex justify-content-end'>
                                  
                                     <% 
-                                    	String userId = session.getAttribute("userId").toString();
-                                   		ArrayList<PresensiModel> isAlreadyAbsensi = connectionPresensi.isAlreadyPresensiToday(userId);
+                                    	String userIdS = session.getAttribute("userId").toString();
+                                   		ArrayList<PresensiModel> isAlreadyAbsensi = connectionPresensi.isAlreadyPresensiToday(userIdS);
                                         
                                         if(isAlreadyAbsensi.size() == 0) {
                                                 out.print("<a class='btn btn-primary' href='handler/handler_absensi.jsp'><i class='material-icons'>add</i> Absen Masuk</a>");
@@ -318,12 +196,13 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                                 <i class="material-icons-outlined">paid</i>
                                             </div>
                                             <div class="widget-stats-content flex-fill">
-                                                <span class="widget-stats-title">Alpha</span>
-                                                <span class="widget-stats-amount">$38,211</span>
-                                                <span class="widget-stats-info">471 Orders Total</span>
-                                            </div>
-                                            <div class="widget-stats-indicator widget-stats-indicator-negative align-self-start">
-                                                <i class="material-icons">keyboard_arrow_down</i> 4%
+                                                <span class="widget-stats-title">Hadir</span>
+                                                <span class="widget-stats-amount">
+                                                <%= countMasuk %>
+                                                </span>
+                                                <span class="widget-stats-info">
+                                                <%= countTerlambat %> Terlambat
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -337,12 +216,13 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                                 <i class="material-icons-outlined">person</i>
                                             </div>
                                             <div class="widget-stats-content flex-fill">
-                                                <span class="widget-stats-title">Terlambat</span>
-                                                <span class="widget-stats-amount">23,491</span>
-                                                <span class="widget-stats-info">790 unique this month</span>
-                                            </div>
-                                            <div class="widget-stats-indicator widget-stats-indicator-positive align-self-start">
-                                                <i class="material-icons">keyboard_arrow_up</i> 12%
+                                                <span class="widget-stats-title">Izin</span>
+                                                <span class="widget-stats-amount">
+                                                <%= countSakit + countIjin %>
+                                                </span>
+                                                <span class="widget-stats-info">
+                                                <%= countSakit %> Sakit / <%= countIjin %> Ijin
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -356,12 +236,13 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                                                 <i class="material-icons-outlined">file_download</i>
                                             </div>
                                             <div class="widget-stats-content flex-fill">
-                                                <span class="widget-stats-title">Presenstase Kehadiran</span>
-                                                <span class="widget-stats-amount">140,390</span>
-                                                <span class="widget-stats-info">87 items downloaded</span>
-                                            </div>
-                                            <div class="widget-stats-indicator widget-stats-indicator-positive align-self-start">
-                                                <i class="material-icons">keyboard_arrow_up</i> 7%
+                                                <span class="widget-stats-title">Persentase</span>
+                                                <span class="widget-stats-amount">
+                                                <%= Utils.calculatePercentage(countMasuk, countPresensi) %> %
+                                                </span>
+                                                <span class="widget-stats-info">
+                                                <%= countMasuk %> Hadir / <%= countPresensi %> Total
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -393,10 +274,7 @@ PresensiDAO connectionPresensi = new PresensiDAO();
                 const date = document.getElementById('date');
 
                 const time = moment().format('HH:mm:ss');
-                const dateToday = moment().format('dddd, DD MMMM');
-
-                console.log(time);
-                console.log(dateToday)
+                const dateToday = moment().format('dddd, DD MMMM YYYY');
 
                 clock.textContent = time;
                 date.textContent = dateToday;
