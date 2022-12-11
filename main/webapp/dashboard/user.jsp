@@ -84,7 +84,7 @@
           <div class="sidebar-user-switcher user-activity-online">
             <a href="#">
               <span class="user-info-text" style="height: 100%"
-                >Raditya Firman Syaputra</span
+                ><% out.print(session.getAttribute("userName")); %></span
               >
             </a>
           </div>
