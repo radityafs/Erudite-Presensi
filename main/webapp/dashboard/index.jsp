@@ -156,11 +156,11 @@ pageEncoding="ISO-8859-1"%>
 
         <%
         UserDAO connectionUser = new UserDAO(); 
-        int countUser = connectionUser.countUser(); 
-        PresensiDAO connectionPresensi = new PresensiDAO(); 
-        int countTotalPresensi = connectionPresensi.getPresensiToday().size();
-                
-        mainUtils Utils = new mainUtils();
+                int countUser = connectionUser.countUser(); 
+                PresensiDAO connectionPresensi = new PresensiDAO(); 
+                int countTotalPresensi = connectionPresensi.getPresensiToday().size();
+                        
+                mainUtils Utils = new mainUtils();
         %>
 
 
@@ -288,11 +288,10 @@ pageEncoding="ISO-8859-1"%>
                             <td><% out.print(presensi.getId()); %></td>
                             <td><% out.print(presensi.getUser().getName()); %></td>
                             <td><% out.print(presensi.getWaktuMasuk()); %></td>
-                            <td><% out.print((presensi.getWaktuPulang() != null) ? presensi.getWaktuPulang() : "Belum"); %></td>
+                            <td><% out.print(presensi.getWaktuPulang()); %></td>
                             <td><% out.print((presensi.getDescription() != null) ? presensi.getDescription() : Utils.getResponse(presensi)); %></td>
                             </tr>
                             <% } %>
-                            
                           </tr>
                         </tbody>
                         <tfoot>
@@ -334,34 +333,41 @@ pageEncoding="ISO-8859-1"%>
               aria-label="Close"
             ></button>
           </div>
+        <form action="../handler/handler_absensi_manual.jsp" method="POST">
           <div class="modal-body">
-            <form action="handler/add_user.jsp">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Nama</label>
                 <select
-                  class="js-example-basic-multiple-limit js-states form-control"
-                  multiple="multiple"
+                  class="js-states form-control"
                   tabindex="-1"
                   style="display: none; width: 100%"
+                  name="userId"
                 >
                 <%
                     ArrayList<UserModel> userList = connectionUser.userList();
    
                     for (int i = 0; i < userList.size(); i++) {
-                        out.print(String.format("<option value='%s'>%s</option>", userList.get(i).getId(), userList.get(i).getName()));
+
+                        String id = String.valueOf(userList.get(i).getId());
+
+                        ArrayList<PresensiModel> isPresensi = connectionPresensi.isAlreadyPresensiToday(id);
+                        
+                        if(isPresensi.size() == 0) {
+                          out.print(String.format("<option value='%s'>%s</option>", userList.get(i).getId(), userList.get(i).getName()));
+                        }
                     }
                 %>
                 </select>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Action</label>
-                <select class="js-states form-control" tabindex="-1" style="display: none; width: 100%">
-                  <option value="ALFA">ALFA</option>
-                  <option value="IJIN">IJIN</option>
-                  <option value="SAKIT">SAKIT</option>
+                <select class="js-states form-control" tabindex="-1" style="display: none; width: 100%"
+                name="state">
+                  <option value="Ijin">IJIN</option>
+                  <option value="Sakit">SAKIT</option>
                 </select>
               </div>
-            </form>
+
           </div>
           <div class="modal-footer">
             <button
@@ -371,10 +377,11 @@ pageEncoding="ISO-8859-1"%>
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">
               Tambahkan Absensi
             </button>
           </div>
+       </form>
         </div>
       </div>
     </div>
@@ -395,10 +402,6 @@ pageEncoding="ISO-8859-1"%>
 
     <script>
       $(document).ready(function () {
-        $(".js-example-basic-multiple-limit").select2({
-          maximumSelectionLength: 10,
-          dropdownParent: $("#exampleModal"),
-        });
 
         $(".js-states").select2({
           dropdownParent: $("#exampleModal"),
