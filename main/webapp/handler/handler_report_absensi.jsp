@@ -7,14 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <%@ page import="com.erudite.model.*" %>
-    <%@ page import="com.erudite.DAO.*" %>
-    <%@ page import="java.util.ArrayList" %>
     <%
-
-    PresensiDAO presensiDAO = new PresensiDAO();
-    UserDAO userDAO = new UserDAO();
-
     String start = request.getParameter("start");
     String end = request.getParameter("end");
 
