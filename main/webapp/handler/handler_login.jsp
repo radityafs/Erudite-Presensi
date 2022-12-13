@@ -37,7 +37,7 @@
 		session.setAttribute("userName",UserLogged.getName());
 		session.setAttribute("userRole",UserLogged.getRole());
 		
-		out.print(UserLogged.getRole());
+		//out.print(UserLogged.getRole());
 		
 		if(UserLogged.getRole().equals("ADMIN")){
 			response.sendRedirect("../dashboard/index.jsp");

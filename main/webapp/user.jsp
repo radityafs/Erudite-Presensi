@@ -116,8 +116,12 @@ for(int j = 0; j < presensiUser.size(); j++){
                         Apps
                     </li>
                     <li class="active-page">
-                        <a href="index.html" class="active"><i
+                        <a href="#" class="active"><i
                                 class="material-icons-two-tone">dashboard</i>Dashboard</a>
+                    </li>
+                    <li class="active-page">
+                        <a href="handler/handler_logout.jsp" class="active"><i
+                                class="material-icons-two-tone">logout</i><span class="text-danger">Keluar</span></a>
                     </li>
                 </ul>
             </div>

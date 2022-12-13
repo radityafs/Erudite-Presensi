@@ -9,7 +9,6 @@ pageEncoding="ISO-8859-1"%>
   <body>
     <%@ page import="com.erudite.model.UserModel" %>
     <%@ page import="com.erudite.DAO.UserDAO" %>
-    <%@ page import="java.util.ArrayList" %>
     <%
     
 	String name=request.getParameter("name");

@@ -108,6 +108,10 @@
                 Absensi</a
               >
             </li>
+            <li class="active-page">
+              <a href="../handler/handler_logout.jsp" class="active"><i
+                 class="material-icons-two-tone">logout</i><span class="text-danger">Keluar</span></a>
+            </li>
           </ul>
         </div>
       </div>

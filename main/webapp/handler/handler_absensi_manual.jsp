@@ -10,7 +10,6 @@
 
     <%@ page import="com.erudite.model.*" %>
     <%@ page import="com.erudite.DAO.*" %>
-    <%@ page import="java.util.ArrayList" %>
 
 <%
 String userId = request.getParameter("userId");
