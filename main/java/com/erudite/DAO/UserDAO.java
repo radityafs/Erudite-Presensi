@@ -37,7 +37,6 @@ public class UserDAO {
 			st=con.createStatement();
 			rs=st.executeQuery(query);
 		}catch (SQLException e) {
-			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;
@@ -50,11 +49,21 @@ public class UserDAO {
 			st=con.createStatement();
 			st.executeUpdate(query);
 		}catch (SQLException e) {
-			//TODO Aut0-generated catch block
 			e.printStackTrace();
 			System.err.println(e);
 		}
 	}
+
+	public void deleteUser(String idUsers) {
+        String query= String.format("DELETE FROM users WHERE id = %s",Integer.parseInt(idUsers));
+        try {
+            st=con.createStatement();
+            st.executeUpdate(query);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e);
+        }
+    }
 	
 	
 	public ArrayList<UserModel> login(UserModel User) {

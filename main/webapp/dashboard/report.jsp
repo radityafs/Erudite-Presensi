@@ -68,6 +68,12 @@
       href="http://localhost/assets/images/neptune.png"
     />
   </head>
+
+  <%@ page import="com.erudite.model.*" %>
+  <%@ page import="com.erudite.Utils.*" %>
+  <%@ page import="com.erudite.DAO.*"%>
+  <%@ page import="java.util.ArrayList" %>
+
   <body>
     <div class="app align-content-stretch d-flex flex-wrap">
       <div class="app-sidebar">
@@ -78,7 +84,7 @@
           <div class="sidebar-user-switcher user-activity-online">
             <a href="#">
               <span class="user-info-text" style="height: 100%"
-                >Raditya Firman Syaputra</span
+                ><% out.print(session.getAttribute("userName")); %></span
               >
             </a>
           </div>
@@ -101,6 +107,10 @@
                 ><i class="material-icons-two-tone">cloud_queue</i>Laporan
                 Absensi</a
               >
+            </li>
+            <li class="active-page">
+              <a href="../handler/handler_logout.jsp" class="active"><i
+                 class="material-icons-two-tone">logout</i><span class="text-danger">Keluar</span></a>
             </li>
           </ul>
         </div>
@@ -152,7 +162,7 @@
                     <div class="card-header">
                       <h5 class="card-title">Pilih rentang tanggal laporan</h5>
                     </div>
-                    <form action="handler/report_absensi.jsp" method="POST">
+                    <form action="../handler/handler_report_absensi.jsp" method="POST">
                       <div class="card-body d-flex justify-content-between">
                         <input
                           class="form-control flatpickr1"
@@ -160,6 +170,7 @@
                           type="text"
                           style="width: 45%"
                           placeholder="Select Date.."
+                          value="<%=(session.getAttribute("start") != null) ? session.getAttribute("start") : "" %>"
                         />
                         <input
                           class="form-control flatpickr1"
@@ -167,6 +178,7 @@
                           name="end"
                           style="width: 45%"
                           placeholder="Select Date.."
+                          value="<%=(session.getAttribute("end") != null) ? session.getAttribute("end") : "" %>"
                         />
                       </div>
                       <div class="card-footer w-100 d-flex justify-content-end">
@@ -200,14 +212,78 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td>1</td>
-                            <td>Raditya Firman Syaputra</td>
-                            <td>20</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>100%</td>
+                          <% 
+                          
+                          if(session.getAttribute("start") != null && session.getAttribute("end") != null){
+
+                                PresensiDAO presensiDAO = new PresensiDAO();
+                                UserDAO userDAO = new UserDAO();
+                                mainUtils Utils = new mainUtils();
+                                
+                                String start = session.getAttribute("start").toString();
+                                String end = session.getAttribute("end").toString();
+
+                                int countPresensi = presensiDAO.getCountPresensiIdByDate(start, end);
+
+                                ArrayList<UserModel> userList = userDAO.userList();
+
+                                for(int i = 0; i < userList.size(); i++){
+                                  
+                                  int userId = userList.get(i).getId();
+                                  ArrayList<PresensiModel> presensiUser = presensiDAO.getPresensiByDateAndId(start, end, userId);
+
+                                  int countMasuk = 0;
+                                  int countAlfa = 0;
+                                  int countIjin = 0;
+                                  int countSakit = 0;
+                                  int countTerlambat = 0;
+
+                                  for(int j = 0; j < presensiUser.size(); j++){
+                                    if(presensiUser.get(j).getDescription() != null && presensiUser.get(j).getWaktuMasuk() == null){
+                                      if(presensiUser.get(j).getDescription().equals("Ijin")){
+                                        countIjin++;
+                                      }else if(presensiUser.get(j).getDescription().equals("Sakit")){
+                                        countSakit++;
+                                      }
+                                    }
+
+                                    if(presensiUser.get(j).getWaktuMasuk() != null){
+                                      countMasuk++;
+
+                                      if(Utils.getResponse(presensiUser.get(j)).equals("Terlambat")){
+                                        countTerlambat++;
+                                      }
+                                    }
+
+                                  }
+                                    countAlfa = countPresensi - (countMasuk + countIjin + countSakit);
+
+                                    out.print("<tr>");
+                                    out.print("<td>"+userList.get(i).getId()+"</td>");
+                                    out.print("<td>"+userList.get(i).getName()+"</td>");
+                                    out.print("<td>"+countMasuk+"</td>");
+                                    out.print("<td>"+countAlfa+"</td>");
+                                    out.print("<td>"+countIjin+"</td>");
+                                    out.print("<td>"+countSakit+"</td>");
+                                    out.print("<td>"+countTerlambat+"</td>");
+                                    out.print("<td>"+String.format("%.2f", Utils.calculatePercentage(countMasuk, countPresensi))+"</td>");
+                                    out.print("</tr>");
+
+
+                                }
+
+                            session.removeAttribute("start");
+                            session.removeAttribute("end");
+                            
+
+                          }else{
+                            out.print("<tr>");
+                            out.print("<td colspan='8' class='text-center'>Pilih rentang tanggal laporan</td>");
+                            out.print("</tr>");
+                          }
+                          
+                          
+                          %>
                           </tr>
                         </tbody>
                         <tfoot>
@@ -233,76 +309,6 @@
       </div>
     </div>
 
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Tambahkan Pengguna
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form action="handler/add_user.jsp">
-              <div class="mb-3">
-                <label for="name" class="col-form-label">Nama:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  name="name"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="email" class="col-form-label">Email:</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  name="email"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="password" class="col-form-label">Password:</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  required
-                />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">
-              Tambahkan User
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Javascripts -->
     <script src="http://localhost/assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="http://localhost/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -318,7 +324,6 @@
 
     <script>
       $(document).ready(function () {
-        console.log("ready!");
       });
     </script>
   </body>

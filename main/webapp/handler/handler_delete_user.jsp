@@ -12,22 +12,10 @@ pageEncoding="ISO-8859-1"%>
     <%@ page import="java.util.ArrayList" %>
     <%
     
-	String name=request.getParameter("name");
-    String email=request.getParameter("email");
-	String password=request.getParameter("password");
-	
-	
-	UserModel User = new UserModel();
-	
-	User.setEmail(email);
-	User.setPassword(password);
-	User.setName(name);
-	User.setRole("USER");
+	String userId=request.getParameter("id");
 	
 	UserDAO connectionUser = new UserDAO();
-	
-	connectionUser.registerUser(User);
-	
+	connectionUser.deleteUser(userId);
 	
 	response.sendRedirect("../dashboard/user.jsp");
 	

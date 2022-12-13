@@ -45,7 +45,7 @@ public class PresensiDAO {
 	}
 
     public void insertPresensiIdToday() {
-        String query= String.format("INSERT INTO presensi(createdAt) VALUES (CURDATE())");
+        String query= String.format("INSERT INTO presensi(created_at) VALUES (CURDATE())");
         try {
             st=con.createStatement();
             st.executeUpdate(query);
@@ -83,7 +83,6 @@ public class PresensiDAO {
             rs=st.executeQuery(query);
             while(rs.next()) {
                 PresensiModel dataPresensi = new PresensiModel();
-                UserModel dataUser = new UserModel();
 
                 dataPresensi.setId(rs.getString("id"));
                 dataPresensi.setIdPresensi(rs.getString("idPresensi"));
@@ -122,7 +121,7 @@ public class PresensiDAO {
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
-                dataUser.setId(rs.getString("idUser"));
+                dataUser.setId(rs.getInt("idUser"));
                 dataUser.setName(rs.getString("name"));
                 dataPresensi.setUser(dataUser);
 
@@ -136,6 +135,7 @@ public class PresensiDAO {
         
         return presensi;
     }
+
 
     public void insertLogPresensi(String id_users) {
         int id_presensi = getPresensiIdToday();
@@ -187,7 +187,7 @@ public class PresensiDAO {
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
-                dataUser.setId(rs.getString("idUser"));
+                dataUser.setId(rs.getInt("idUser"));
                 dataUser.setName(rs.getString("nama"));
                 dataPresensi.setUser(dataUser);
 
@@ -199,6 +199,71 @@ public class PresensiDAO {
             System.err.println(e);
         }
         return presensi;
+    }
+
+    public int getCountPresensiIdByDate(String start_date, String end_date) {
+        int count = 0;
+        String query= String.format("SELECT COUNT(id) AS count FROM presensi WHERE DATE(created_at) BETWEEN '%s' AND '%s'",start_date,end_date);
+        try {
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            while(rs.next()) {
+                count = rs.getInt("count");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e);
+        }
+        return count;
+    }
+
+    public ArrayList<PresensiModel> getPresensiByDateAndId(String start_date, String end_date, int id_users) {
+        ArrayList<PresensiModel> presensi = new ArrayList<PresensiModel>();
+        String query= String.format("SELECT log_presensi.id AS id, waktuMasuk, waktuPulang, description,name FROM presensi LEFT JOIN log_presensi ON presensi.id = log_presensi.idPresensi LEFT JOIN users ON log_presensi.idUser = users.id WHERE DATE(presensi.created_at) BETWEEN '%s' AND '%s' AND users.id = %s;",start_date,end_date,id_users);
+        
+        try {
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            while(rs.next()) {
+                PresensiModel dataPresensi = new PresensiModel();
+                UserModel dataUser = new UserModel();
+
+                dataPresensi.setIdPresensi(rs.getString("id"));
+                dataPresensi.setWaktuMasuk(rs.getString("waktuMasuk"));
+                dataPresensi.setWaktuPulang(rs.getString("waktuPulang"));
+                dataPresensi.setDescription(rs.getString("description"));
+
+                dataUser.setName(rs.getString("name"));
+                dataPresensi.setUser(dataUser);
+
+                presensi.add(dataPresensi);
+            }
+
+        }catch (SQLException e) {
+            //TODO Aut0-generated catch block
+            e.printStackTrace();
+            System.err.println(e);
+        }
+        return presensi;
+    }
+
+
+    public void insertAbsensiLogManual(String id_users, String description){
+        int id_presensi = getPresensiIdToday();
+
+        if(id_presensi == 0) {
+            insertPresensiIdToday();
+            id_presensi = getPresensiIdToday();
+        }
+        
+        String query= String.format("INSERT INTO log_presensi(idPresensi, idUser, description, updatedAt, createdAt) VALUES ('%s','%s','%s', NOW(), NOW())",id_presensi,id_users,description);
+        try {
+            st=con.createStatement();
+            st.executeUpdate(query);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e);
+        }
     }
 	
 }

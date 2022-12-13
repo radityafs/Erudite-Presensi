@@ -84,7 +84,7 @@
           <div class="sidebar-user-switcher user-activity-online">
             <a href="#">
               <span class="user-info-text" style="height: 100%"
-                >Raditya Firman Syaputra</span
+                ><% out.print(session.getAttribute("userName")); %></span
               >
             </a>
           </div>
@@ -107,6 +107,10 @@
                 ><i class="material-icons-two-tone">cloud_queue</i>Laporan
                 Absensi</a
               >
+            </li>
+            <li class="active-page">
+              <a href="../handler/handler_logout.jsp" class="active"><i
+                 class="material-icons-two-tone">logout</i><span class="text-danger">Keluar</span></a>
             </li>
           </ul>
         </div>
@@ -195,7 +199,7 @@
                         out.println("<td>" + user.getName() + "</td>");
                         out.println("<td>" + user.getEmail() + "</td>");
                         out.println("<td>");
-                        out.println("<form action='handler/user-delete.jsp'>");
+                        out.println("<form action='../handler/handler_delete_user.jsp'>");
                         out.println("<input type='hidden' name='id' value='" + user.getId() + "' />");
                         out.println("<button type='submit' class='btn btn-danger'>");
                         out.println("Delete");

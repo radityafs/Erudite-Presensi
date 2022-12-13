@@ -63,9 +63,9 @@
         </div>
         <p class="auth-description">
             Please sign-in to your account and continue to the dashboard.<br />Don't
-            have an account? <a href="sign-up.html">Sign Up</a>
+            have an account? <a href="#">Contact Admin</a>
         </p>
-        
+        <p class="text-danger">
         <% 
         
         if(session.getAttribute("error") != null){
@@ -74,7 +74,7 @@
         }
         
         %>
-
+		</p>
 		<form action="handler/handler_login.jsp" method="POST">
         <div class="auth-credentials m-b-xxl">
         
