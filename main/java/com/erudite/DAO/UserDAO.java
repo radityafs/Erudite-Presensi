@@ -37,7 +37,6 @@ public class UserDAO {
 			st=con.createStatement();
 			rs=st.executeQuery(query);
 		}catch (SQLException e) {
-			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;
@@ -50,7 +49,6 @@ public class UserDAO {
 			st=con.createStatement();
 			st.executeUpdate(query);
 		}catch (SQLException e) {
-			//TODO Aut0-generated catch block
 			e.printStackTrace();
 			System.err.println(e);
 		}
@@ -62,7 +60,6 @@ public class UserDAO {
             st=con.createStatement();
             st.executeUpdate(query);
         }catch (SQLException e) {
-            //TODO Aut0-generated catch block
             e.printStackTrace();
             System.err.println(e);
         }

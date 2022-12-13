@@ -83,7 +83,6 @@ public class PresensiDAO {
             rs=st.executeQuery(query);
             while(rs.next()) {
                 PresensiModel dataPresensi = new PresensiModel();
-                UserModel dataUser = new UserModel();
 
                 dataPresensi.setId(rs.getString("id"));
                 dataPresensi.setIdPresensi(rs.getString("idPresensi"));
@@ -122,7 +121,7 @@ public class PresensiDAO {
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
-                dataUser.setId(rs.getString("idUser"));
+                dataUser.setId(rs.getInt("idUser"));
                 dataUser.setName(rs.getString("name"));
                 dataPresensi.setUser(dataUser);
 
@@ -188,7 +187,7 @@ public class PresensiDAO {
                 dataPresensi.setCreatedAt(rs.getString("createdAt"));
                 dataPresensi.setUpdatedAt(rs.getString("updatedAt"));
 
-                dataUser.setId(rs.getString("idUser"));
+                dataUser.setId(rs.getInt("idUser"));
                 dataUser.setName(rs.getString("nama"));
                 dataPresensi.setUser(dataUser);
 

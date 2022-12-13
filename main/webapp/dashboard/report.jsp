@@ -266,7 +266,7 @@
                                     out.print("<td>"+countIjin+"</td>");
                                     out.print("<td>"+countSakit+"</td>");
                                     out.print("<td>"+countTerlambat+"</td>");
-                                    out.print("<td>"+Utils.calculatePercentage(countMasuk, countPresensi)+"</td>");
+                                    out.print("<td>"+String.format("%.2f", Utils.calculatePercentage(countMasuk, countPresensi))+"</td>");
                                     out.print("</tr>");
 
 

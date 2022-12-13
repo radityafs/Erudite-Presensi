@@ -124,6 +124,7 @@ pageEncoding="ISO-8859-1"%>
               <a href="../handler/handler_logout.jsp" class="active"><i
                  class="material-icons-two-tone">logout</i><span class="text-danger">Keluar</span></a>
             </li>
+            
           </ul>
         </div>
       </div>
@@ -296,7 +297,6 @@ pageEncoding="ISO-8859-1"%>
                             <td><% out.print((presensi.getDescription() != null) ? presensi.getDescription() : Utils.getResponse(presensi)); %></td>
                             </tr>
                             <% } %>
-                          </tr>
                         </tbody>
                         <tfoot>
                           <tr>
